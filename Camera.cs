@@ -51,17 +51,17 @@ public partial class Camera : Node3D
 	{
 		Vector3 velocity = Vector3.Zero;
 		
-		if (Input.IsKeyPressed(Key.W))
+		if (Input.IsActionPressed("move_forward"))
 			velocity -= Transform.Basis.Z;
-		if (Input.IsKeyPressed(Key.S))
+		if (Input.IsActionPressed("move_backward"))
 			velocity += Transform.Basis.Z;
-		if (Input.IsKeyPressed(Key.A))
+		if (Input.IsActionPressed("move_left"))
 			velocity -= Transform.Basis.X;
-		if (Input.IsKeyPressed(Key.D))
+		if (Input.IsActionPressed("move_right"))
 			velocity += Transform.Basis.X;
-		if (Input.IsKeyPressed(Key.Space))
+		if (Input.IsActionPressed("move_up"))
 			velocity += Transform.Basis.Y;
-		if (Input.IsKeyPressed(Key.Shift))
+		if (Input.IsActionPressed("move_down"))
 			velocity -= Transform.Basis.Y;
 		
 		if (velocity.Length() > 0)
