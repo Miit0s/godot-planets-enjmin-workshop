@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+[Tool]
 public partial class TerrainPlanet : Node3D
 {
 	[Export] public float RotationSpeed = 0.1f;
@@ -33,7 +34,11 @@ public partial class TerrainPlanet : Node3D
 
 	public override void _Process(double delta)
 	{
-		RotateY(RotationSpeed * (float)delta);
+		// Only rotate when running the game, not in editor
+		if (!Engine.IsEditorHint())
+		{
+			RotateY(RotationSpeed * (float)delta);
+		}
 	}
 
 	private void CreateTerrainTexture()

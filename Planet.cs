@@ -15,4 +15,3 @@ public partial class Planet : Node3D
 		RotateY(RotationSpeed * (float)delta);
 	}
 }
-
