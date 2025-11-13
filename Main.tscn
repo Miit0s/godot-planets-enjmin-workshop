@@ -5,6 +5,7 @@
 
 [sub_resource type="Environment" id="Environment_uu6xs"]
 background_mode = 1
+background_color = Color(0.045763686, 0.045763686, 0.04576368, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.31753132, 0.3583657, 0.6605058, 1)
 ambient_light_energy = 0.2
@@ -25,3 +26,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.229)
 
 [node name="TerrainPlanet" parent="." instance=ExtResource("3_r0du0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48774624, 0, 0.7869568)
+ShowCollisionMesh = true
