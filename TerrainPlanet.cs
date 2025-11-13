@@ -44,8 +44,23 @@ public partial class TerrainPlanet : Node3D
 		// Create the terrain texture generation pipeline
 		CreateTerrainTexture();
 
-		// Wait one frame for viewport to render
-		CallDeferred(MethodName.CreateMeshes);
+		// Wait for viewport to render, then create meshes
+		WaitForViewportAndCreateMeshes();
+	}
+	
+	private async void WaitForViewportAndCreateMeshes()
+	{
+		// Wait for the next frame
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		
+		// Force the rendering server to render
+		RenderingServer.ForceSync();
+		
+		// Wait one more frame to be safe
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		
+		// Now create the meshes
+		CreateMeshes();
 	}
 
 	public override void _Process(double delta)
@@ -64,7 +79,7 @@ public partial class TerrainPlanet : Node3D
 		}
 	}
 
-	private void RegeneratePlanet()
+	private async void RegeneratePlanet()
 	{
 		GD.Print("Regenerating planet...");
 
@@ -74,9 +89,14 @@ public partial class TerrainPlanet : Node3D
 			child.QueueFree();
 		}
 
+		// Wait for cleanup to complete
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		
 		// Recreate everything
-		CallDeferred(MethodName.CreateTerrainTexture);
-		CallDeferred(MethodName.CreateMeshes);
+		CreateTerrainTexture();
+		
+		// Wait for viewport to render, then create meshes
+		WaitForViewportAndCreateMeshes();
 	}
 
 	private void CreateTerrainTexture()
