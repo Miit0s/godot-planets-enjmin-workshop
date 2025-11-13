@@ -13,12 +13,7 @@ public partial class TerrainPlanet : Node3D
 	[Export] public int VisualSubdivisionsHeight = 256;
 	[Export] public int CollisionSubdivisionsRadial = 24;
 	[Export] public int CollisionSubdivisionsHeight = 48;
-	[Export] public int NoiseOctaves = 6;
-	[Export] public float NoisePersistence = 0.5f;
-	[Export] public float NoiseLacunarity = 2.0f;
-	[Export] public float NoiseScale = 2.0f;
-	[Export] public int NoiseSeed = 12345;
-
+	[Export] public bool ShowCollisionMesh = false;
 	private bool _regenerateRequested = false;
 
 	[Export]
@@ -103,11 +98,6 @@ public partial class TerrainPlanet : Node3D
 		var terrainMaterial = new ShaderMaterial();
 		terrainMaterial.Shader = terrainShader;
 		terrainMaterial.SetShaderParameter("height_scale", HeightScale);
-		terrainMaterial.SetShaderParameter("noise_scale", NoiseScale);
-		terrainMaterial.SetShaderParameter("octaves", NoiseOctaves);
-		terrainMaterial.SetShaderParameter("persistence", NoisePersistence);
-		terrainMaterial.SetShaderParameter("lacunarity", NoiseLacunarity);
-		terrainMaterial.SetShaderParameter("seed_value", NoiseSeed);
 
 		_terrainColorRect.Material = terrainMaterial;
 		_terrainViewport.AddChild(_terrainColorRect);
@@ -222,6 +212,24 @@ public partial class TerrainPlanet : Node3D
 		collisionShape.Shape = collisionMesh.CreateTrimeshShape();
 
 		_collisionBody.AddChild(collisionShape);
+		
+		// Add debug visualization if enabled
+		if (ShowCollisionMesh)
+		{
+			var debugMesh = new MeshInstance3D();
+			debugMesh.Mesh = collisionMesh;
+			
+			// Create a semi-transparent material for visualization
+			var debugMaterial = new StandardMaterial3D();
+			debugMaterial.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
+			debugMaterial.AlbedoColor = new Color(0, 1, 0, 0.3f); // Green with 30% opacity
+			debugMaterial.CullMode = BaseMaterial3D.CullModeEnum.Disabled; // Show both sides
+			debugMaterial.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
+			
+			debugMesh.MaterialOverride = debugMaterial;
+			_collisionBody.AddChild(debugMesh);
+		}
+		
 		AddChild(_collisionBody);
 	}
 

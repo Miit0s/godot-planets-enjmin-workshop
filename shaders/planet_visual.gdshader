@@ -2,8 +2,8 @@ shader_type spatial;
 
 render_mode unshaded; //, wireframe, cull_disabled;
 uniform sampler2D terrain_texture : filter_linear, repeat_disable;
-uniform float height_scale = 0.5;
-uniform float planet_radius = 5.0;
+uniform float height_scale;
+uniform float planet_radius;
 
 varying vec3 local_pos;
 
@@ -17,7 +17,8 @@ vec2 positionToUV(vec3 pos) {
     float phi = atan(unit.x, unit.z); // -PI to PI
 
     // Convert to UV (0 to 1)
-    float u = phi / (2.0 * PI) + 0.5;
+    // Use fract to handle negative phi values correctly
+    float u = fract(phi / (2.0 * PI));
     float v = 1.0-theta / PI;
 
     return vec2(u, v);
@@ -34,7 +35,7 @@ void vertex() {
 
     // Displace vertex along normal
     vec3 displaced_pos = normalize(local_pos) * (planet_radius + height * height_scale);
-    
+
     VERTEX = displaced_pos;
 }
 
@@ -43,9 +44,10 @@ void fragment() {
 
     vec4 terrain_data = texture(terrain_texture, uv);
     float height = terrain_data.r;
-    float v = fract(height * 10.0);
+    float v = height - 1.0;
 
     ALBEDO = vec3(v,v, v);
+    //ALBEDO = vec3(uv.x, uv.y, 0);
     ROUGHNESS = 0.8;
     SPECULAR = 0.2;
 }

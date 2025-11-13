@@ -4,5 +4,4 @@
 
 [node name="TerrainPlanet" type="Node3D"]
 script = ExtResource("1_terrain")
-NoiseOctaves = 1
-NoiseLacunarity = 3.0
+HeightScale = 1.0
