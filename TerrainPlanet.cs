@@ -2,10 +2,11 @@ using Godot;
 using System;
 
 [Tool]
-public partial class TerrainPlanet : Node3D
+public partial class TerrainPlanet : Planet
 {
-	[Export] public float RotationSpeed = 0.1f;
+	[Export] public new float RotationSpeed = 0.1f;
 	[Export] public float PlanetRadius = 5.0f;
+	[Export] public float GravityStrength = 9.8f;
 	[Export] public float HeightScale = 0.5f;
 	[Export] public int TextureWidth = 2048;
 	[Export] public int TextureHeight = 1024;
@@ -72,11 +73,11 @@ public partial class TerrainPlanet : Node3D
 			RegeneratePlanet();
 		}
 
-		// Only rotate when running the game, not in editor
-		if (!Engine.IsEditorHint())
-		{
-			RotateY(RotationSpeed * (float)delta);
-		}
+		// // Only rotate when running the game, not in editor
+		// if (!Engine.IsEditorHint())
+		// {
+		// 	RotateY(RotationSpeed * (float)delta);
+		// }
 	}
 
 	private async void RegeneratePlanet()
@@ -321,5 +322,20 @@ public partial class TerrainPlanet : Node3D
 		float height = Mathf.Lerp(h0, h1, ty);
 
 		return height * HeightScale;
+	}
+
+	/// <summary>
+	/// Get the gravitational force at a given position in world space.
+	/// For TerrainPlanet, this is simple radial gravity from the planet center.
+	/// </summary>
+	public override Vector3 GetForce(Vector3 position)
+	{
+		Vector3 toPlanet = GlobalPosition - position;
+		float distance = toPlanet.Length();
+
+		if (distance < 0.001f)
+			return Vector3.Zero;
+
+		return toPlanet.Normalized() * GravityStrength;
 	}
 }
