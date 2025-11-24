@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmgcki5tqkngm"]
+
+[ext_resource type="PackedScene" uid="uid://c1qa132yvavg" path="res://Props/Assets/Tree01.FBX" id="1_1inup"]
+[ext_resource type="Texture2D" uid="uid://st0mafdyo6gi" path="res://Props/Assets/Tree01.png" id="2_j2e6t"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j2e6t"]
+albedo_texture = ExtResource("2_j2e6t")
+
+[node name="Tree01" instance=ExtResource("1_1inup")]
+
+[node name="Tree01" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_j2e6t")

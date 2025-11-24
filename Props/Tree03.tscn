@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://dj6rkmtojo0ui"]
+
+[ext_resource type="PackedScene" uid="uid://bordbi1jdt5cx" path="res://Props/Assets/Tree03.FBX" id="1_hw5a5"]
+[ext_resource type="Texture2D" uid="uid://cyedylwnwbggf" path="res://Props/Assets/Tree03.png" id="2_f08ni"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bu6gr"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("2_f08ni")
+
+[node name="Tree03" instance=ExtResource("1_hw5a5")]
+
+[node name="Tree03" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_bu6gr")
