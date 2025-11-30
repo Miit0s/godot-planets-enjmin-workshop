@@ -9,7 +9,8 @@ public enum CameraMode
 
 public partial class Camera : CharacterBody3D
 {
-	[Export] public float MoveSpeed = 10.0f;
+	[Export] public float FlySpeed = 40.0f;
+	[Export] public float WalkSpeed = 10.0f;
 	[Export] public float MouseSensitivity = 0.003f;
 	[Export] public float MinPitch = -89.0f;
 	[Export] public float MaxPitch = 89.0f;
@@ -142,7 +143,7 @@ public partial class Camera : CharacterBody3D
 			velocity = velocity.Normalized();
 		}
 
-		Velocity = velocity * MoveSpeed;
+		Velocity = velocity * FlySpeed;
 		MoveAndSlide();
 	}
 
@@ -191,7 +192,7 @@ public partial class Camera : CharacterBody3D
 		{
 			inputDir = inputDir.Normalized();
 			inputDir = (inputDir - inputDir.Dot(upDirection) * upDirection).Normalized();
-			_velocity += inputDir * MoveSpeed * (float)delta * 1.0f;
+			_velocity += inputDir * WalkSpeed * (float)delta * 1.0f;
 		}
 
 		// Apply friction on the horizontal plane

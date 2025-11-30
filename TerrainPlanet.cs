@@ -1,19 +1,15 @@
 using Godot;
 using System;
 
-[Tool]
 public partial class TerrainPlanet : Planet
 {
-	[Export] public new float RotationSpeed = 0.1f;
-	[Export] public float PlanetRadius = 5.0f;
+	[Export] public float PlanetRadius = 50.0f;
 	[Export] public float GravityStrength = 9.8f;
-	[Export] public float HeightScale = 0.5f;
+	[Export] public float HeightScale = 20.0f;
 	[Export] public int TextureWidth = 2048;
 	[Export] public int TextureHeight = 1024;
-	[Export] public int VisualSubdivisionsRadial = 128;
-	[Export] public int VisualSubdivisionsHeight = 256;
-	[Export] public int CollisionSubdivisionsRadial = 24;
-	[Export] public int CollisionSubdivisionsHeight = 48;
+	[Export] public int VisualSubdivisionsRadial = 256;
+	[Export] public int VisualSubdivisionsHeight = 512;
 	[Export] public bool ShowCollisionMesh = false;
 	private bool _regenerateRequested = false;
 
@@ -155,6 +151,7 @@ public partial class TerrainPlanet : Planet
 		sphereMesh.Rings = VisualSubdivisionsHeight;
 
 		_visualMesh.Mesh = sphereMesh;
+		_visualMesh.ExtraCullMargin = HeightScale;
 
 		// Apply visual shader
 		var visualShader = GD.Load<Shader>("res://shaders/planet_visual.gdshader");
@@ -176,8 +173,8 @@ public partial class TerrainPlanet : Planet
 		var surfaceTool = new SurfaceTool();
 		surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
 
-		int radialSegments = CollisionSubdivisionsRadial;
-		int heightSegments = CollisionSubdivisionsHeight;
+		int radialSegments = VisualSubdivisionsRadial >> 1;
+		int heightSegments = VisualSubdivisionsHeight >> 1;
 
 		// Generate vertices with height displacement
 		for (int y = 0; y <= heightSegments; y++)

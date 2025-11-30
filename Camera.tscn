@@ -12,5 +12,4 @@ fov = 45.0
 near = 0.1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.385, 0, 0, 0, 0.385, 0, 0, 0, 0.385, 0, 0, 0)
 shape = SubResource("SphereShape3D_e6e23")
