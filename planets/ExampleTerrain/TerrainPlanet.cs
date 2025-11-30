@@ -3,7 +3,7 @@ using System;
 
 public partial class TerrainPlanet : Planet
 {
-	static readonly string ResPath = "res://planets/example_terrain/";
+	static readonly string ResPath = "res://Planets/ExampleTerrain/";
 	[Export] public float PlanetRadius = 50.0f;
 	[Export] public float GravityStrength = 9.8f;
 	[Export] public float HeightScale = 20.0f;
