@@ -55,3 +55,8 @@ move={
 "deadzone": 0.2,
 "events": []
 }
+
+[rendering]
+
+lights_and_shadows/directional_shadow/size=8192
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5

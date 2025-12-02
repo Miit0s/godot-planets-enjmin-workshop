@@ -9,7 +9,7 @@ public enum CameraMode
 
 public partial class Camera : CharacterBody3D
 {
-	[Export] public float FlySpeed = 100.0f;
+	[Export] public float FlySpeed = 200.0f;
 	[Export] public float WalkSpeed = 20.0f;
 	[Export] public float FlyFriction = 0.02f;
 	[Export] public float WalkFriction = 0.03f;

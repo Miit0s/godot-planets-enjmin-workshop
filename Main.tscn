@@ -20,9 +20,11 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 16, 
 light_color = Color(1, 1, 0.91764706, 1)
 light_energy = 2.0
 shadow_enabled = true
+directional_shadow_blend_splits = true
+directional_shadow_fade_start = 0.5
+directional_shadow_max_distance = 500.0
 
 [node name="Camera" parent="." instance=ExtResource("2_c5hml")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 100)
 
 [node name="TerrainPlanet" parent="." instance=ExtResource("3_r0du0")]
-HeightScale = 10.0

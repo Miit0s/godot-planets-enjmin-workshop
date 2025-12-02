@@ -1,6 +1,6 @@
 shader_type spatial;
 
-render_mode unshaded; //, wireframe, cull_disabled;
+// render_mode unshaded; //, wireframe, cull_disabled;
 uniform sampler2D terrain_texture : filter_linear, repeat_disable;
 uniform float height_scale;
 uniform float planet_radius;
@@ -22,6 +22,10 @@ vec2 positionToUV(vec3 pos) {
     float v = 1.0-theta / PI;
 
     return vec2(u, v);
+}
+
+vec3 rgb(int r, int g, int b) {
+    return vec3(float(r) / 255.0, float(g) / 255.0, float(b) / 255.0);
 }
 
 void vertex() {
@@ -46,7 +50,12 @@ void fragment() {
     float height = terrain_data.r;
     float v = height - 1.0;
 
-    ALBEDO = vec3(v,v, v);
+    vec3 c1 = rgb(50, 41, 30);
+    vec3 c2 = rgb(126, 110, 82);
+
+    vec3 color = mix(c1, c2, clamp(v, 0.0, 1.0));
+
+    ALBEDO = color;
     //ALBEDO = vec3(uv.x, uv.y, 0);
     ROUGHNESS = 0.8;
     SPECULAR = 0.2;

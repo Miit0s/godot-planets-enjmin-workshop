@@ -13,7 +13,7 @@ void fragment() {
     );
 
     float height = 1.0;
-    float freq = PI * 4.0;
+    float freq = PI * 2.0;
     float amp = 0.3;
     height += sin(unit.x * freq + 0.1) * amp;
     height += sin(unit.y * freq + 0.7) * amp;
