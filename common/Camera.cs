@@ -23,7 +23,6 @@ public partial class Camera : CharacterBody3D
 
 	private Camera3D camera;
 	
-	// Mouse look angles - meaning depends on mode
 	private float pitch = 0.0f;
 	private float yaw = 0.0f;
 	
@@ -34,11 +33,17 @@ public partial class Camera : CharacterBody3D
 	// For walk mode: cached gravity-aligned basis
 	private Basis gravityAlignedBasis = Basis.Identity;
 	
+	// For fly mode: independent basis that rotates freely
+	private Basis flyBasis = Basis.Identity;
+	
 	public override void _Ready()
 	{
 		camera = GetNode<Camera3D>("Camera3D");
 		FindAllPlanets();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
+		
+		// Initialize fly basis from current transform
+		flyBasis = Transform.Basis.Orthonormalized();
 	}
 
 	private void FindAllPlanets()
@@ -72,18 +77,49 @@ public partial class Camera : CharacterBody3D
 			}
 			else if (keyEvent.Keycode == Key.Tab)
 			{
-				mode = (mode == CameraMode.Fly) ? CameraMode.Walk : CameraMode.Fly;
+				if (mode == CameraMode.Fly)
+				{
+					// Switching to Walk: sync gravity basis from current fly basis
+					mode = CameraMode.Walk;
+					gravityAlignedBasis = flyBasis;
+					pitch = 0.0f;
+					yaw = 0.0f;
+				}
+				else
+				{
+					// Switching to Fly: capture current transform as fly basis
+					mode = CameraMode.Fly;
+					flyBasis = Transform.Basis.Orthonormalized();
+				}
 			}
 		}
 		
 		if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
-			yaw -= mouseMotion.Relative.X * MouseSensitivity;
-			pitch -= mouseMotion.Relative.Y * MouseSensitivity;
-			
-			pitch = Mathf.Clamp(pitch, Mathf.DegToRad(MinPitch), Mathf.DegToRad(MaxPitch));
-			
-			// DON'T set rotation here - let _PhysicsProcess handle it
+			if (mode == CameraMode.Fly)
+			{
+				// In fly mode, apply rotations incrementally to avoid gimbal lock
+				float deltaYaw = -mouseMotion.Relative.X * MouseSensitivity;
+				float deltaPitch = -mouseMotion.Relative.Y * MouseSensitivity;
+				
+				// Apply yaw around current local Y axis
+				Quaternion yawRot = new Quaternion(flyBasis.Y, deltaYaw);
+				flyBasis = new Basis(yawRot) * flyBasis;
+				
+				// Apply pitch around the NEW local X axis (after yaw)
+				Quaternion pitchRot = new Quaternion(flyBasis.X, deltaPitch);
+				flyBasis = new Basis(pitchRot) * flyBasis;
+				
+				// Orthonormalize to prevent drift accumulation
+				flyBasis = flyBasis.Orthonormalized();
+			}
+			else
+			{
+				// In walk mode, accumulate pitch/yaw for gravity-relative look
+				yaw -= mouseMotion.Relative.X * MouseSensitivity;
+				pitch -= mouseMotion.Relative.Y * MouseSensitivity;
+				pitch = Mathf.Clamp(pitch, Mathf.DegToRad(MinPitch), Mathf.DegToRad(MaxPitch));
+			}
 		}
 	}
 
@@ -103,12 +139,17 @@ public partial class Camera : CharacterBody3D
 		float gravityMagnitude = totalGravity.Length();
 		Vector3 upDirection = gravityMagnitude > 0.001f ? -totalGravity.Normalized() : Vector3.Up;
 
-		UpdateGravityAlignment(totalGravity, (float)delta);
 
-		if(mode == CameraMode.Walk)
+		Basis finalBasis;
+		if(mode == CameraMode.Walk) {
+			UpdateGravityAlignment(totalGravity, (float)delta);
 			velocity += totalGravity * (float)delta;
-
-		Basis finalBasis = ApplyMouseLookToGravityBasis();
+			finalBasis = ApplyMouseLookToGravityBasis();
+		}
+		else {
+			// Fly mode: use the fly basis directly
+			finalBasis = flyBasis;
+		}
 		Vector3 inputDir = Vector3.Zero;
 		if (Input.IsActionPressed("move_forward"))
 			inputDir -= finalBasis.Z;
@@ -136,12 +177,18 @@ public partial class Camera : CharacterBody3D
 			}
         }
 
-		// Project input direction onto the plane perpendicular to gravity
 		if (inputDir.Length() > 0)
 		{
 			var speed = mode == CameraMode.Walk ? WalkSpeed : FlySpeed;
 			inputDir = inputDir.Normalized();
-			inputDir = (inputDir - inputDir.Dot(upDirection) * upDirection).Normalized();
+			
+			// In Walk mode, project input direction onto the plane perpendicular to gravity
+			// In Fly mode, move freely in the camera's direction
+			if (mode == CameraMode.Walk)
+			{
+				inputDir = (inputDir - inputDir.Dot(upDirection) * upDirection).Normalized();
+			}
+			
 			velocity += inputDir * speed * (float)delta;
 		}
 
