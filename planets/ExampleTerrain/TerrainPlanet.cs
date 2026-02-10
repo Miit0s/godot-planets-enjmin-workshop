@@ -299,10 +299,7 @@ public partial class TerrainPlanet : Planet
 		Vector3 tangentU = (rightPos - centerPos).Normalized();
 		Vector3 tangentV = (upPos - centerPos).Normalized();
 
-		// Calculate normal using cross product
-		Vector3 normal = tangentU.Cross(tangentV).Normalized();
-
-		return normal;
+		return tangentU.Cross(tangentV).Normalized();
 	}
 
 	public override Vector3 GetForce(Vector3 position)
@@ -353,7 +350,6 @@ public partial class TerrainPlanet : Planet
 
 			// Sample height at this location
 			float height = SampleHeightFromUV(u, v);
-			GD.Print($"height {height}");
 
 			// Only spawn if height is negative
 			if (height < HeightScale/2)
