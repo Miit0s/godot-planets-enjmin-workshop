@@ -5,6 +5,7 @@ class_name DesertGenerator
 @export var size_depth: int = 100
 @export var size_width: int = 100
 @export var mesh_resolution: int = 3
+@export var noise_height_multiplication: float = 2
 
 @export var mesh_instance_3d: MeshInstance3D
 @export var noise: FastNoiseLite
@@ -41,7 +42,7 @@ func generate():
 	
 	for i in range(data.get_vertex_count()):
 		var vertex: Vector3 = data.get_vertex(i)
-		vertex.y = noise.get_noise_2d(vertex.x, vertex.z)
+		vertex.y = noise.get_noise_2d(vertex.x, vertex.z) * noise_height_multiplication
 		data.set_vertex(i, vertex)
 	
 	array_plane.clear_surfaces()
