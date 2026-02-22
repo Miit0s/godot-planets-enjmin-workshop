@@ -1,14 +1,21 @@
 @tool
 extends Node
-class_name DesertGenerator
+class_name RockGenerator
 
 @export_category("Mesh Parameters")
 @export var size_depth: int = 50
 @export var size_width: int = 50
-@export var mesh_resolution: int = 1
+@export var mesh_resolution: int = 3
 
-@export_category("Desert Parameters")
-@export var noise_height_multiplication: float = 3
+@export_category("Rock Parameters")
+@export var noise_height_multiplication: float = 30.0
+@export var base_depth: float = 2.0
+@export var rock_threshold: float = 0.2
+@export var steepness: float = 5.0
+
+@export var terrace_steps: int = 8
+@export var terrace_strength: float = 0.85
+
 @export var noise: FastNoiseLite
 @export var material: StandardMaterial3D
 
@@ -19,7 +26,7 @@ class_name DesertGenerator
 
 var _surface_tool: SurfaceTool
 
-func _ready():
+func _ready() -> void:
 	generate()
 
 func create_new_mesh():
@@ -46,7 +53,20 @@ func generate():
 	
 	for i in range(data.get_vertex_count()):
 		var vertex: Vector3 = data.get_vertex(i)
-		vertex.y = noise.get_noise_2d(vertex.x, vertex.z) * noise_height_multiplication
+		
+		var normalized_noise: float = noise.get_noise_2d(vertex.x, vertex.z)
+		normalized_noise = (normalized_noise + 1.0) / 2.0
+		
+		if normalized_noise < rock_threshold:
+			normalized_noise = 0.0
+		else:
+			normalized_noise = (normalized_noise - rock_threshold) / (1.0 - rock_threshold)
+			normalized_noise = pow(normalized_noise, steepness)
+			
+			var terraced_normalized: float = floor(normalized_noise * terrace_steps) / float(terrace_steps)
+			normalized_noise = lerp(normalized_noise, terraced_normalized, terrace_strength)
+		
+		vertex.y = (normalized_noise * noise_height_multiplication) - base_depth
 		data.set_vertex(i, vertex)
 	
 	array_mesh.clear_surfaces()

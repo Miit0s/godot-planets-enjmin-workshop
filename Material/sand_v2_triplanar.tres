@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://y531elg4ejmg"]
+
+[ext_resource type="Texture2D" uid="uid://c0xrk2ki22pn" path="res://Material/sand_v2_albedo.png" id="1_u84mp"]
+[ext_resource type="Texture2D" uid="uid://doqdcbu2d43wu" path="res://Material/sand_v2_orm.png" id="2_ndgkb"]
+[ext_resource type="Texture2D" uid="uid://b43ofctokrcvn" path="res://Material/sand_v2_normal.png" id="3_xmhbm"]
+
+[resource]
+albedo_texture = ExtResource("1_u84mp")
+roughness_texture = ExtResource("2_ndgkb")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_texture = ExtResource("3_xmhbm")
+ao_enabled = true
+ao_texture = ExtResource("2_ndgkb")
+uv1_scale = Vector3(0.02, 0.02, 0.02)
+uv1_triplanar = true
