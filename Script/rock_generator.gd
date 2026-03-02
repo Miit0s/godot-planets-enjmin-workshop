@@ -17,7 +17,7 @@ class_name RockGenerator
 @export var terrace_strength: float = 0.85
 
 @export var noise: FastNoiseLite
-@export var material: StandardMaterial3D
+@export var material: Material
 
 @export_category("Ref")
 @export var mesh_instance_3d: MeshInstance3D

@@ -10,7 +10,7 @@ class_name DesertGenerator
 @export_category("Desert Parameters")
 @export var noise_height_multiplication: float = 3
 @export var noise: FastNoiseLite
-@export var material: StandardMaterial3D
+@export var material: Material
 
 @export_category("Ref")
 @export var mesh_instance_3d: MeshInstance3D
@@ -41,7 +41,7 @@ func generate():
 	noise.seed = randi()
 	
 	var data: MeshDataTool = MeshDataTool.new()
-	var array_mesh = _surface_tool.commit()
+	var array_mesh: ArrayMesh = _surface_tool.commit()
 	data.create_from_surface(array_mesh, 0)
 	
 	for i in range(data.get_vertex_count()):
