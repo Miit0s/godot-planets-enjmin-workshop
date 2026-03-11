@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cjq2x4ucdyvyq"]
 
-[ext_resource type="PackedScene" uid="uid://bsfpq2ib27t2w" path="res://common/Camera.tscn" id="2_c5hml"]
-[ext_resource type="PackedScene" uid="uid://kur46nkbuow5" path="res://Planets/ExampleTerrain/TerrainPlanet.tscn" id="3_r0du0"]
+[ext_resource type="PackedScene" uid="uid://bsfpq2ib27t2w" path="res://common/Camera.tscn" id="1_r0du0"]
+[ext_resource type="PackedScene" uid="uid://kur46nkbuow5" path="res://Planets/ExampleTerrain/TerrainPlanet.tscn" id="2_cm0pq"]
+[ext_resource type="PackedScene" uid="uid://n281y3v254gd" path="res://Arrakis_Riallan_Ewen/DesertPlanetTestScene.tscn" id="3_fos0i"]
 
 [sub_resource type="Environment" id="Environment_uu6xs"]
 background_mode = 1
@@ -9,6 +10,10 @@ background_color = Color(0.045763686, 0.045763686, 0.04576368, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.31753132, 0.3583657, 0.6605058, 1)
 ambient_light_energy = 0.2
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+volumetric_fog_length = 150.0
+volumetric_fog_ambient_inject = 3.0
 
 [node name="Main" type="Node3D" unique_id=2091247588]
 
@@ -24,7 +29,10 @@ directional_shadow_blend_splits = true
 directional_shadow_fade_start = 0.5
 directional_shadow_max_distance = 500.0
 
-[node name="Camera" parent="." unique_id=845426492 instance=ExtResource("2_c5hml")]
+[node name="Camera" parent="." unique_id=845426492 instance=ExtResource("1_r0du0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 100)
 
-[node name="TerrainPlanet" parent="." unique_id=1043419726 instance=ExtResource("3_r0du0")]
+[node name="TerrainPlanet" parent="." unique_id=1043419726 instance=ExtResource("2_cm0pq")]
+
+[node name="Arrakis" parent="." unique_id=1588027353 instance=ExtResource("3_fos0i")]
+transform = Transform3D(-0.9113673, 0, -0.41159397, 0, 1, 0, 0.41159397, 0, -0.9113673, 201.53345, 75.753624, -12.221277)
