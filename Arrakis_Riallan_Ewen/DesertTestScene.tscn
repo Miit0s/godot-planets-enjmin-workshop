@@ -1,11 +1,11 @@
 [gd_scene format=4 uid="uid://be2iup2isowfv"]
 
-[ext_resource type="Script" uid="uid://2us7eub55yb1" path="res://Script/desert_generator.gd" id="1_1lfjb"]
-[ext_resource type="Material" uid="uid://c47e3i8c5pci7" path="res://Material/sand_v2.tres" id="2_pgkx7"]
-[ext_resource type="Material" uid="uid://g0kpqxqwo7qb" path="res://Material/rock.tres" id="2_ycklu"]
-[ext_resource type="Script" uid="uid://bv6yjvnuyx23h" path="res://Script/rock_generator.gd" id="3_mfdn4"]
-[ext_resource type="FastNoiseLite" uid="uid://dia0xd3upecgd" path="res://Noise/desert_noise.tres" id="4_fq8r6"]
-[ext_resource type="FastNoiseLite" uid="uid://boc8v85sd3m8y" path="res://Noise/rock_noise.tres" id="6_8iko2"]
+[ext_resource type="Script" uid="uid://2us7eub55yb1" path="res://Arrakis_Riallan_Ewen/Script/desert_generator.gd" id="1_1lfjb"]
+[ext_resource type="Material" uid="uid://c47e3i8c5pci7" path="res://Arrakis_Riallan_Ewen/Material/sand_v2.tres" id="2_pgkx7"]
+[ext_resource type="Material" uid="uid://g0kpqxqwo7qb" path="res://Arrakis_Riallan_Ewen/Material/rock.tres" id="2_ycklu"]
+[ext_resource type="Script" uid="uid://bv6yjvnuyx23h" path="res://Arrakis_Riallan_Ewen/Script/rock_generator.gd" id="3_mfdn4"]
+[ext_resource type="FastNoiseLite" uid="uid://dia0xd3upecgd" path="res://Arrakis_Riallan_Ewen/Noise/desert_noise.tres" id="4_fq8r6"]
+[ext_resource type="FastNoiseLite" uid="uid://boc8v85sd3m8y" path="res://Arrakis_Riallan_Ewen/Noise/rock_noise.tres" id="6_8iko2"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_i7mvg"]
 _surfaces = [{

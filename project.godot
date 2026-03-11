@@ -23,6 +23,12 @@ config/icon="res://icon.svg"
 
 project/assembly_name="planets"
 
+[file_customization]
+
+folder_colors={
+"res://Arrakis_Riallan_Ewen/": "orange"
+}
+
 [input]
 
 move_forward={
@@ -64,3 +70,5 @@ move={
 
 lights_and_shadows/directional_shadow/size=8192
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
+environment/volumetric_fog/volume_size=128
+environment/volumetric_fog/volume_depth=128

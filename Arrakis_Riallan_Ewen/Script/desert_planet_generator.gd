@@ -16,12 +16,16 @@ class_name DesertPlanetGenerator
 @export var rocks_mesh_resolution: int = 5
 @export var noise_height_multiplication_for_rock: float = 2
 
+#How deep is the rock sunk into the desert
 @export var base_depth: float = 2.0
-@export var rock_threshold: float = 0.2
-@export var steepness: float = 5.0
+#Min value the noise should have to trigger a rock
+@export var rock_threshold: float = 0.5
 
-@export var terrace_steps: int = 8
-@export var terrace_strength: float = 0.85
+@export var min_neighbors_for_terrace: int = 4
+@export var max_neighbors_for_terrace: int = 16
+
+@export var min_height_resize_for_terrace: float = 1.0
+@export var max_height_resize_for_terrace: float = 2.0
 
 @export var rock_mesh_instance_3d: MeshInstance3D
 @export var rock_noise: FastNoiseLite
@@ -87,25 +91,25 @@ func generate_rocks():
 	var array_mesh = _surface_tool.commit()
 	data.create_from_surface(array_mesh, 0)
 	
+	var processed_vertices: Array[bool] = []
+	processed_vertices.resize(data.get_vertex_count())
+	processed_vertices.fill(false)
+	
 	for i in range(data.get_vertex_count()):
+		if processed_vertices[i]: continue
+		
 		var vertex: Vector3 = data.get_vertex(i)
 		
 		var normalized_noise: float = rock_noise.get_noise_3dv(vertex)
 		normalized_noise = (normalized_noise + 1.0) / 2.0
-		var normal: Vector3 = vertex.normalized()
 		
 		if normalized_noise < rock_threshold:
-			normalized_noise = 0.0
+			apply_height_to_vertex(data, i, 0.0)
+			processed_vertices[i] = true
 		else:
-			normalized_noise = (normalized_noise - rock_threshold) / (1.0 - rock_threshold)
-			normalized_noise = pow(normalized_noise, steepness)
-			
-			var terraced_normalized: float = floor(normalized_noise * terrace_steps) / float(terrace_steps)
-			normalized_noise = lerp(normalized_noise, terraced_normalized, terrace_strength)
-		
-		var current_height: float = planet_radius - base_depth + (normalized_noise * noise_height_multiplication_for_rock)
-		vertex = normal * current_height
-		data.set_vertex(i, vertex)
+			var number_of_vertex_for_terrace: int = randi_range(min_neighbors_for_terrace, max_neighbors_for_terrace)
+			var random_height: float = normalized_noise * randf_range(min_height_resize_for_terrace, max_height_resize_for_terrace)
+			create_terrace(data, i, random_height, number_of_vertex_for_terrace, processed_vertices)
 	
 	array_mesh.clear_surfaces()
 	data.commit_to_surface(array_mesh)
@@ -115,3 +119,47 @@ func generate_rocks():
 	_surface_tool.generate_normals()
 	
 	rock_mesh_instance_3d.mesh = _surface_tool.commit()
+
+func get_vertex_neighbors(data: MeshDataTool, vertex_index: int) -> Array[int]:
+	var neighbors: Array[int] = []
+	
+	var edges: PackedInt32Array = data.get_vertex_edges(vertex_index)
+	
+	for edge_index in edges:
+		var v1: int = data.get_edge_vertex(edge_index, 0)
+		var v2: int = data.get_edge_vertex(edge_index, 1)
+		
+		var vertex_to_append: int = v1 if v2 == vertex_index else v2
+		neighbors.append(vertex_to_append)
+	
+	return neighbors
+
+func create_terrace(data: MeshDataTool, vertex_index: int, normalized_height: float, terrace_size: int, processed_vertices: Array[bool]):
+	var size_to_proceed: int = terrace_size
+	var possible_index_to_use: Array[int] = [vertex_index]
+	
+	apply_height_to_vertex(data, vertex_index, normalized_height)
+	processed_vertices[vertex_index] = true
+	
+	while size_to_proceed > 0:
+		if possible_index_to_use.is_empty(): break
+		
+		var random_vertex_index: int = possible_index_to_use.pop_at(randi_range(0, possible_index_to_use.size() - 1))
+		var vertex_neighbors: Array[int] = get_vertex_neighbors(data, random_vertex_index)
+		
+		for neighbor in vertex_neighbors:
+			if size_to_proceed <= 0: break
+			if processed_vertices[neighbor]: continue
+			
+			apply_height_to_vertex(data, neighbor, normalized_height)
+			processed_vertices[neighbor] = true
+			possible_index_to_use.append(neighbor)
+			size_to_proceed -= 1
+
+func apply_height_to_vertex(data: MeshDataTool, vertex_index: int, normalized_noise: float):
+	var vertex: Vector3 = data.get_vertex(vertex_index)
+	var normal: Vector3 = vertex.normalized()
+	
+	var current_height: float = (planet_radius - base_depth) + (normalized_noise * noise_height_multiplication_for_rock)
+	vertex = normal * current_height
+	data.set_vertex(vertex_index, vertex)

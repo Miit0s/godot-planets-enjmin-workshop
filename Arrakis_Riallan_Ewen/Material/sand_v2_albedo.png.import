@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkg3t5en13ldc"
-path.s3tc="res://.godot/imported/rock_orm.png-b0a45abadb5e0eac3601c5cf49f684f7.s3tc.ctex"
+uid="uid://c0xrk2ki22pn"
+path.s3tc="res://.godot/imported/sand_v2_albedo.png-148c0359f72e3708ccc195a5c87e9af2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Material/rock_orm.png"
-dest_files=["res://.godot/imported/rock_orm.png-b0a45abadb5e0eac3601c5cf49f684f7.s3tc.ctex"]
+source_file="res://Arrakis_Riallan_Ewen/Material/sand_v2_albedo.png"
+dest_files=["res://.godot/imported/sand_v2_albedo.png-148c0359f72e3708ccc195a5c87e9af2.s3tc.ctex"]
 
 [params]
 
@@ -26,8 +26,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=8
-roughness/src_normal="res://Material/rock_normal.png"
+roughness/mode=0
+roughness/src_normal=""
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
