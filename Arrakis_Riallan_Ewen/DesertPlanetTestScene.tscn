@@ -22,7 +22,7 @@ glow_enabled = true
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.0
 volumetric_fog_length = 150.0
-volumetric_fog_ambient_inject = 2.0
+volumetric_fog_ambient_inject = 3.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ogqmc"]
 _surfaces = [{
@@ -74,7 +74,7 @@ shader_parameter/base_noise_scale = 0.1
 shader_parameter/detail_noise_scale = 0.2
 shader_parameter/wind_direction = Vector3(0.5, 0.5, 0)
 shader_parameter/wind_speed = 1.0
-shader_parameter/albedo = Color(0.94466764, 0.59828687, 0.31070414, 1)
+shader_parameter/albedo = Color(0.7607843, 0.47843137, 0.34509805, 1)
 shader_parameter/density_multiplier = 8.0
 shader_parameter/edge_softness = 2.0
 
